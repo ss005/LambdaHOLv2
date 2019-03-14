@@ -25,7 +25,7 @@ public class C_DefaultMethods {
      * Given a list of StringBuilders, modify each StringBuilder
      * in-place by appending the string "new" to each one.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c01_appendNew() {
         List<StringBuilder> sbList = List.of(
             new StringBuilder("alfa"),
@@ -33,6 +33,10 @@ public class C_DefaultMethods {
             new StringBuilder("charlie"));
 
         // TODO write code to modify sbList
+        /*sbList = sbList.stream()
+                .map(s -> s.append("new"))
+                .collect(Collectors.toList());*/
+        sbList.forEach(sb -> sb.append("new"));
 
         assertEquals(List.of("alfanew", "bravonew", "charlienew"),
                      sbList.stream()
@@ -48,12 +52,13 @@ public class C_DefaultMethods {
     /**
      * Remove the words that have odd lengths from the list.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c02_removeOddLengthWords() {
         List<String> list = new ArrayList<>(Arrays.asList(
             "alfa", "bravo", "charlie", "delta", "echo", "foxtrot"));
 
         // TODO write code to modify list
+        list.removeIf(s -> s.length() % 2 != 0);
 
         assertEquals(List.of("alfa", "echo"), list);
     }
@@ -66,12 +71,13 @@ public class C_DefaultMethods {
     /**
      * Replace every word in the list with its upper case equivalent.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c03_upcaseAllWords() {
         List<String> list = Arrays.asList(
             "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
         // TODO code to modify list
+        list.forEach(String::toUpperCase);
 
         assertEquals(List.of("ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT"),
                      list);
@@ -87,7 +93,7 @@ public class C_DefaultMethods {
      * append to each StringBuilder the string representation of its corresponding
      * Integer key. This should mutate each StringBuilder value in-place.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c04_appendToMapValues() {
         Map<Integer, StringBuilder> map = new TreeMap<>();
         map.put(1, new StringBuilder("alfa"));
@@ -95,6 +101,7 @@ public class C_DefaultMethods {
         map.put(3, new StringBuilder("charlie"));
 
         // TODO write code to modify map
+        map.forEach((k, v) -> v.append(k));
 
         assertEquals(3, map.size());
         assertTrue(map.values().stream().allMatch(x -> x instanceof StringBuilder));
@@ -113,7 +120,7 @@ public class C_DefaultMethods {
      * append to each String the string representation of its corresponding
      * Integer key.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c05_replaceMapValues() {
         Map<Integer, String> map = new TreeMap<>();
         map.put(1, "alfa");
@@ -121,6 +128,8 @@ public class C_DefaultMethods {
         map.put(3, "charlie");
 
         // TODO write code to modify map
+//        map.forEach((k, v) ->  v = v + k );
+        map.replaceAll((k, v) -> v + k);
 
         assertEquals(Map.of(1, "alfa1",
                             2, "bravo2",
@@ -137,7 +146,7 @@ public class C_DefaultMethods {
      * Given a list of words, populate a map whose keys are the lengths of
      * each word, and whose values are list of words with that length.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c06_mapOfListOfStringsByLength() {
         List<String> list = List.of(
             "aardvark", "bison", "capybara",
@@ -146,6 +155,8 @@ public class C_DefaultMethods {
         Map<Integer, List<String>> result = new TreeMap<>();
 
         // TODO write code to populate result
+        result = list.stream()
+                .collect(Collectors.groupingBy(String::length, TreeMap::new, Collectors.toList()));
 
         assertEquals(Map.of( 5, List.of("bison"),
                              6, List.of("avocet"),
@@ -165,7 +176,7 @@ public class C_DefaultMethods {
      * initial character. When concatenating the words, they should be
      * separated by a colon (':').
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c07_mapOfStringByInitialCharacter() {
         List<String> list = List.of(
             "aardvark", "bison", "capybara",
@@ -174,6 +185,10 @@ public class C_DefaultMethods {
         Map<Character, String> result = new TreeMap<>();
 
         // TODO write code to populate result
+        list.forEach(
+                elem -> result.merge(elem.charAt(0), elem, (existing, newVal) -> existing + ":" + newVal)
+        );
+
 
         assertEquals(Map.of('a', "aardvark:alligator:avocet",
                             'b', "bison:bushbaby:bustard",
