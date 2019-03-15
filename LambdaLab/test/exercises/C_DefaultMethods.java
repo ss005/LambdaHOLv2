@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.Ignore;
@@ -77,7 +78,7 @@ public class C_DefaultMethods {
             "alfa", "bravo", "charlie", "delta", "echo", "foxtrot");
 
         // TODO code to modify list
-        list.forEach(String::toUpperCase);
+        list.replaceAll(String::toUpperCase);
 
         assertEquals(List.of("ALFA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT"),
                      list);
@@ -207,7 +208,7 @@ public class C_DefaultMethods {
      * null, and we need to add checks to protect against NullPointerException.
      * Write code to ensure that all missing keys are mapped to the empty string.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c08_mapWithMissingValues() {
         List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -216,6 +217,7 @@ public class C_DefaultMethods {
                                                        "d", "delta"));
 
         // TODO write code to fix the map
+        keys.forEach(key -> map.putIfAbsent(key, ""));
 
         assertEquals(Map.of("a", "alfa",
                             "b", "bravo",
@@ -237,7 +239,7 @@ public class C_DefaultMethods {
      * We've now determined that's incorrect, and we want to undo that. This
      * time, we want to remove the entry if the value is the empty string.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c09_mapRemoveEntriesWithEmptyValues() {
         List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -249,6 +251,7 @@ public class C_DefaultMethods {
                                                        "g", ""));
 
         // TODO write code to fix the map
+        keys.forEach(k -> map.remove(k, ""));
 
         assertEquals(Map.of("a", "alfa",
                             "b", "bravo",
@@ -268,7 +271,7 @@ public class C_DefaultMethods {
      * to replace the empty-string values with a value that's the key itself.
      * Write the code to do that.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c10_mapReplaceEmptyValues() {
         List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -280,6 +283,13 @@ public class C_DefaultMethods {
                                                        "g", ""));
 
         // TODO write code to fix the map
+        /*map.replaceAll((k, v) -> {
+            if (v.isEmpty())
+                return k;
+            else
+                return v;
+        });*/
+        keys.forEach(k -> map.replace(k, "", k));
 
         assertEquals(Map.of("a", "alfa",
                             "b", "bravo",
@@ -302,7 +312,7 @@ public class C_DefaultMethods {
      * that are not present, we want to add an entry where the value is the
      * same as the key.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c11_computeWithMissingEntries() {
         List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -310,7 +320,12 @@ public class C_DefaultMethods {
                                                        "c", "charlie",
                                                        "d", "delta"));
 
+        map.computeIfAbsent("a", String::toUpperCase);
         // TODO write code transform the map
+        keys.forEach( k -> {
+            map.computeIfPresent(k, (key, val) -> val.toUpperCase());
+            map.putIfAbsent(k, k);
+        });
 
         assertEquals(Map.of("a", "ALFA",
                             "b", "BRAVO",
@@ -334,7 +349,7 @@ public class C_DefaultMethods {
      * the non-empty values to upper case, but we want to remove the entries
      * for which the values are the empty string.
      */
-    @Test @Ignore
+    @Test //@Ignore
     public void c12_computeAndRemoveSomeEntries() {
         List<String> keys = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         Map<String, String> map = new HashMap<>(Map.of("a", "alfa",
@@ -346,6 +361,10 @@ public class C_DefaultMethods {
                                                        "g", ""));
 
         // TODO write code transform the map
+        keys.forEach( k-> {
+            map.computeIfPresent(k, (key, val) -> val.toUpperCase());
+            map.remove(k, "");
+        });
 
         assertEquals(Map.of("a", "ALFA",
                             "b", "BRAVO",

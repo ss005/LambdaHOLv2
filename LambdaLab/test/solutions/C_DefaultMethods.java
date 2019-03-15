@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  * This set of exercises covers new default methods on
  * the Collections and related APIs.
  */
-public class C_DefaultMethods {
+public class    C_DefaultMethods {
 
     /**
      * Given a list of StringBuilders, modify each StringBuilder
