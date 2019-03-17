@@ -14,8 +14,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.function.LongBinaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
@@ -42,6 +45,11 @@ public class E_IntermediateStreams {
         List<String> input = List.of("alfa", "bravo", "charlie");
 
         List<Character> result = null; // TODO
+        result = input.stream()
+                .map(s -> s.chars())
+                .flatMap(IntStream::boxed)
+                .map(integer -> (char) integer.intValue())
+                .collect(Collectors.toList());
 
         assertEquals("[a, l, f, a, b, r, a, v, o, c, h, a, r, l, i, e]", result.toString());
         assertTrue(result.stream().allMatch(x -> x instanceof Character));
@@ -70,6 +78,11 @@ public class E_IntermediateStreams {
     @Test @Ignore
     public void e2_listOfAllWords() throws IOException {
         List<String> output = null; // TODO
+        List<String> stringList = reader.lines().collect(Collectors.toList());
+        output = stringList.stream()
+                .flatMap(s -> SPLIT_PATTERN.splitAsStream(s))
+                .collect(Collectors.toList());
+
 
         assertEquals(
             List.of(
@@ -104,6 +117,12 @@ public class E_IntermediateStreams {
     @Test @Ignore
     public void e3_longLowerCaseSortedWords() throws IOException {
         List<String> output = null; // TODO
+        output = reader.lines()
+                .flatMap(s -> SPLIT_PATTERN.splitAsStream(s))
+                .filter(s -> s.length() >= 8)
+                .map(String::toLowerCase)
+                .sorted()
+                .collect(Collectors.toList());
 
         assertEquals(
             List.of(
@@ -127,6 +146,12 @@ public class E_IntermediateStreams {
     @Test @Ignore
     public void e4_longLowerCaseReverseSortedWords() throws IOException {
         List<String> result = null; // TODO
+        result = reader.lines()
+                .flatMap(s -> SPLIT_PATTERN.splitAsStream(s))
+                .filter(s -> s.length() >= 8)
+                .map(String::toLowerCase)
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
 
         assertEquals(
             List.of(
@@ -149,6 +174,13 @@ public class E_IntermediateStreams {
     @Test @Ignore
     public void e5_sortedLowerCaseDistinctByLengthThenAlphabetically() throws IOException {
         List<String> result = null; // TODO
+        result = reader.lines()
+                .flatMap(s -> SPLIT_PATTERN.splitAsStream(s))
+                .map(String::toLowerCase)
+                .distinct()
+                .sorted(Comparator.comparing(String::length)
+                        .thenComparing(Comparator.naturalOrder()))
+                .collect(Collectors.toList());
 
         assertEquals(
             List.of(
@@ -183,6 +215,8 @@ public class E_IntermediateStreams {
     @Test @Ignore
     public void e6_bigFactorial() {
         BigInteger result = BigInteger.ONE; // TODO
+        LongStream.range(1, 22)
+                .reduce((l1, l2) -> l1 * l2);
 
         assertEquals(new BigInteger("51090942171709440000"), result);
     }
