@@ -144,7 +144,9 @@ public class D_SimpleStreams {
     @Test @Ignore
     public void d5_findLongestLine() throws IOException {
         String longest = null; // TODO
-        longest = reader.lines().max(Comparator.comparingInt(String::length)).get();
+        longest = reader.lines()
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
 
         assertEquals("Feed'st thy light's flame with self-substantial fuel,", longest);
     }
